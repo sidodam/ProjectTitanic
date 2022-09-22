@@ -3,6 +3,8 @@ package com.company;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Passenger {
@@ -23,6 +25,11 @@ public class Passenger {
 
 
 
+    private Country getCountry() {
+        return country;
+    }
+
+
 
     public Passenger(String idCard, Country country, Zone zone, String name, boolean handicap, LocalDate birthDay, int roomNumber) {
 
@@ -37,9 +44,12 @@ public class Passenger {
 
 
         passengersData.add(this);
+        passengersData.sort(Comparator.comparing(Passenger::getCountry)); //ordenar por pais , esto sigue el orden del ENUM
 
 
     }
+
+
 
 
 
@@ -93,21 +103,64 @@ public class Passenger {
 
     }
 
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public Zone getZone() {
+        return zone;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMiddleName() {
+
+        return name.split(" ")[1];
+    }
+
+    public String getLastName() {
+        return name.split(" ")[2];
+    }
+
+    public boolean isHandicap() {
+        return handicap;
+    }
+
+    public LocalDate getBirthDay() {
+        return birthDay;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
     public static void passengerNumbers() {
         System.out.println(numberOfPassengers);
 
     }
 
+    public static List<Passenger> getPassengersData() {
+        return passengersData;
+    }
+
     public  int calculateAge() {
-        LocalDate hoy = LocalDate.now();
-        if ((this.birthDay != null) && (hoy != null)) {
-            return Period.between(this.birthDay, hoy).getYears();
+        LocalDate today = LocalDate.now();
+        if ((this.birthDay != null) && (today != null)) {
+            return Period.between(this.birthDay, today).getYears();
         } else {
             return 0;
         }
     }
 
 
+
+
+
+
 }
+
+
 
 
