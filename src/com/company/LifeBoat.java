@@ -32,37 +32,28 @@ public class LifeBoat {
         passenger.sort(Comparator.comparing(Passenger::getBirthDay));
         Collections.reverse(passenger);
 
+        List<Passenger> family = findFamily("adrian kouki garcia");
 
-
+//        for (int i = 0; i < family.size(); i++) {
+//            System.out.print("the name is: ");
+//            System.out.println(family.get(i).getName());
+//        }
 
         for (int i = 0; i < passenger.size(); i++) {
-
 
             while (passenger.get(i).calculateAge() < 18 && evacuatedPassengersData.size() < 3)
             // como solo tenemos 6 plazas y cada minor tiene que
             // tener un madre/padre con el,  no podemos llenar el barco con mas de 3 minores
             {
 
-                evacuatedPassengersData.add(passenger.get(i));
+                for (int j = 0; j < findFamily(passenger.get(i).getName()).size(); j++) {
+                    System.out.println("J" + j);
+                    evacuatedPassengersData.add(findFamily(passenger.get(i).getName()).get(j));
 
+                }
                 passenger.remove(passenger.get(i));
 
             }
-
-            for (int j = 0; j < passenger.size(); j++) {
-
-
-                if (evacuatedPassengersData.get(i).getMiddleName().equals(passenger.get(j).getMiddleName()) ||
-                        evacuatedPassengersData.get(i).getLastName().equals(passenger.get(j).getLastName())
-                ) {
-
-                    evacuatedPassengersData.add(passenger.get(j));
-                    passenger.remove(passenger.get(j));
-
-                }
-            }
-
-
 
         }
 
@@ -87,6 +78,28 @@ public class LifeBoat {
             seatNumbers[i] = ++j;
 
         }
+    }
+
+    private List<Passenger> findFamily(String childName){
+
+        List<Passenger> passenger = Passenger.passengersData;
+        String middleName = childName.split(" ")[1];
+        String LastName = childName.split(" ")[2];
+
+        List<Passenger> family = new ArrayList<Passenger>();
+
+        for (int i = 0; i <passenger.size(); i++) {
+
+            if(middleName.equals(passenger.get(i).getMiddleName())
+                    ||LastName.equals(passenger.get(i).getLastName()) )
+
+            {
+                family.add(passenger.get(i));
+
+            }
+        }
+
+        return family;
     }
 
 
