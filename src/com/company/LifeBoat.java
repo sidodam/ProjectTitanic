@@ -1,86 +1,132 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class LifeBoat {
-    int id;
+    private  int id;
     Zone zone;
-    private int[] seatNumbers = new int[6];
+    final int seatNumbers = 6;
+    List<ArrayList<Passenger>> PassengersInBoat = Arrays.asList ((ArrayList<Passenger>[])new ArrayList[6]);
+
+
+
 
 
     public static List<Passenger> evacuatedPassengersData = new ArrayList<Passenger>();
 
-    public LifeBoat(int id, Zone zone) {
+//    public LifeBoat(int id, Zone zone) {
+//
+//        this.id = id;
+//        this.zone = zone;
+//
+//
+//        //  Passenger.DAOPersons();4
+//
+//
+//    }
 
-        this.id = id;
-        this.zone = zone;
-        setSeatNumbers(); // llenar numeros de 1 a 6
 
-        //  Passenger.DAOPersons();
-
-
-    }
-
-
-    public void Evacuate() // cada barco va a tener su propio evecuacion asi que no puede ser static
+    public static void Evacuate()
     {
 
         List<Passenger> passenger = Passenger.passengersData;
+
+
+
         passenger.sort(Comparator.comparing(Passenger::getBirthDay));
         Collections.reverse(passenger);
 
-        List<Passenger> family = findFamily("adrian kouki garcia");
 
-//        for (int i = 0; i < family.size(); i++) {
-//            System.out.print("the name is: ");
-//            System.out.println(family.get(i).getName());
-//        }
 
         for (int i = 0; i < passenger.size(); i++) {
 
-            while (passenger.get(i).calculateAge() < 18 && evacuatedPassengersData.size() < 3)
-            // como solo tenemos 6 plazas y cada minor tiene que
-            // tener un madre/padre con el,  no podemos llenar el barco con mas de 3 minores
+
+
+            if(passenger.get(i).calculateAge() < 18 )
             {
 
-                for (int j = 0; j < findFamily(passenger.get(i).getName()).size(); j++) {
-                    System.out.println("J" + j);
+
+                for (int j = 0; j < findFamily(passenger.get(i).getName()).size(); j++)
+                {
                     evacuatedPassengersData.add(findFamily(passenger.get(i).getName()).get(j));
 
+
                 }
-                passenger.remove(passenger.get(i));
+
+
+
+                //   passenger.remove(passenger.get(i));
+            }
+
+            else if (passenger.get(i).getRank() == 0 && !evacuatedPassengersData.contains(passenger.get(i)))  {
+                evacuatedPassengersData.add(passenger.get(i));
+
+            }
+
+        }
+            // ahora para extraer los tripulantes:
+        for (int i = 0; i < passenger.size(); i++) {
+            passenger.sort(Comparator.comparing(Passenger::getRank));
+
+            if (passenger.get(i).getRank() != 0)  {
+                evacuatedPassengersData.add(passenger.get(i));
 
             }
 
         }
 
 
-        for (Passenger ep : evacuatedPassengersData) {
+        int bowEvacuee = 0;
+        int seternEvacuee = 0 ;
 
+        for (Passenger ep : evacuatedPassengersData) {
+            if (ep.getZone().equals(Zone.BOW))
+            {
+                bowEvacuee++;
+            }
+
+            if (bowEvacuee==7)
+            {
+                System.out.println("the seventh: " + ep.getName());
+                break;
+            }
+            System.out.println(ep.getName() + " with id: " + ep.getIdCard() +
+                    " please evacuate to boat number: " + "" + " of section: " + " " + " using exit number: "  + " " );
+
+            System.out.println("*************************");
+
+
+        }
+
+        System.out.println("bowEvacuee"+bowEvacuee);
+
+
+
+    }
+
+
+
+
+    public static void DAOBotes(){
+
+        for (Passenger ep : evacuatedPassengersData) {
+            System.out.println("evacuated passengers in order are: ");
             System.out.println("birth day: " + ep.getBirthDay());
             System.out.println(ep.getName());
-            System.out.println("roomNimber: " + ep.getRoomNumber());
+            System.out.println("roomNimber: " + ep.getZone());
             System.out.println("*************************");
 
 
         }
 
 
+
+
+
     }
 
-
-    private void setSeatNumbers() {
-        int j = 0;
-        for (int i = 0; i < seatNumbers.length; i++) {
-            seatNumbers[i] = ++j;
-
-        }
-    }
-
-    private List<Passenger> findFamily(String childName){
+// metodo para encontrar todos los miembros de un minor
+    private static List<Passenger> findFamily(String childName){
 
         List<Passenger> passenger = Passenger.passengersData;
         String middleName = childName.split(" ")[1];

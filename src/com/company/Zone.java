@@ -11,6 +11,7 @@ public enum Zone {
 
     final int[] exits;
 
+
      Zone(int[] exits) {
         this.exits = exits;
     }
